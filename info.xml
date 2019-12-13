@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
-<extension key="nl.onvergetelijk.kampleeftijd" type="module">
-  <file>kampleeftijd</file>
-  <name>Onvergetelijke Zomerkampen - Kampleeftijd</name>
+<extension key="nl.onvergetelijk.leeftijd" type="module">
+  <file>leeftijd</file>
+  <name>Onvergetelijke Zomerkampen - Leeftijd</name>
   <description>Deze extensie berekent de leeftijd op 1 augustus van de komende zomer</description>
   <license>GNU AGPL</license>
   <maintainer>
     <author>Richard van Oosterhout</author>
     <email>info@onvergetelijkezomerkampen.nl</email>
   </maintainer>
-  <releaseDate>2014-10-24</releaseDate>
-  <version>0.1</version>
-  <develStage>alpha</develStage>
+  <releaseDate>2019-12-13</releaseDate>
+  <version>1.1</version>
+  <develStage>beta</develStage>
   <compatibility>
-    <ver>4.7</ver>
+    <ver>5.20</ver>
   </compatibility>
   <comments>This module extension is specific to the Promotie Custom Field Group</comments>
 </extension>

@@ -4,7 +4,7 @@
 #ini_set('display_errors', TRUE);
 #ini_set('display_startup_errors', TRUE);
 
-require_once 'kampleeftijd.civix.php';
+require_once 'leeftijd.civix.php';
 
 /**
  * Implementation of hook_civicrm_custom
@@ -12,9 +12,12 @@ require_once 'kampleeftijd.civix.php';
  * This is needed only if there is a computed (View Only) custom field in this set.
  */
 
-function kampleeftijd_civicrm_validateprofile($profileName)
+function leeftijd_civicrm_validateprofile($profileName)
 {
+
+    $extdebug            = 0;
     $processkampleeftijd = 0;
+
     if ($profileName === 'BEHEER_GEBOORTEDATUM_101' or
         $profileName === 'Verjaardag_en_geslacht_68' or
         $profileName === 'Verjaardag_en_geslacht_97' or
@@ -23,20 +26,22 @@ function kampleeftijd_civicrm_validateprofile($profileName)
         $profileName === 'Verjaardag_en_geslacht_99' or
         $profileName === 'Verjaardag_en_geslacht_19'
     ) {
-        watchdog('php', '<pre>---STARTKAMPLEEFTIJD---</pre>', null, WATCHDOG_DEBUG);
+        if ($extdebug == 1) { watchdog('php', '<pre>---START KAMPLEEFTIJD---</pre>', null, WATCHDOG_DEBUG); }
         $processkampleeftijd = 1;
-        watchdog('php', '<pre>validateprofile: profile_name:' . print_r($profileName, true) . '</pre>', null, WATCHDOG_DEBUG);
-        watchdog('php', '<pre>set_processkampleeftijd:' . print_r($processkampleeftijd, true) . '</pre>', null, WATCHDOG_DEBUG);
+        if ($extdebug == 1) { watchdog('php', '<pre>validateprofile: profile_name:' . print_r($profileName, true) . '</pre>', null, WATCHDOG_DEBUG); }
+        if ($extdebug == 1) { watchdog('php', '<pre>set_processkampleeftijd:' . print_r($processkampleeftijd, true) . '</pre>', null, WATCHDOG_DEBUG); }
         #watchdog('php', '<pre>gid:' . print_r($gid, true) . '</pre>', null, WATCHDOG_DEBUG);
         #watchdog('php', '<pre>id:' . print_r($id, true) . '</pre>', null, WATCHDOG_DEBUG);
         #watchdog('php', '<pre>group_id:' . print_r($groupID, true) . '</pre>', null, WATCHDOG_DEBUG);
         #watchdog('php', '<pre>entityid:' . print_r($entityID, true) . '</pre>', null, WATCHDOG_DEBUG);
-        watchdog('php', '<pre>---ENDKAMPLEEFTIJD---</pre>', null, WATCHDOG_DEBUG);
+        if ($extdebug == 1) { watchdog('php', '<pre>---EINDE KAMPLEEFTIJD---</pre>', null, WATCHDOG_DEBUG); }
     }
 }
 
-function kampleeftijd_civicrm_custom($op, $groupID, $entityID)
+function leeftijd_civicrm_custom($op, $groupID, $entityID)
 {
+
+    $extdebug            = 0;
 
     #if (!in_array($groupID, array("103","181", "139", "190"))) { // ALLEEN PART + EVENT PROFILES
     if (!in_array($groupID, array("103","106","139"))) { // ALLEEN PART PROFILES
@@ -53,7 +58,7 @@ function kampleeftijd_civicrm_custom($op, $groupID, $entityID)
         return; //   if not, get out of here
     }
 
-    watchdog('php', '<pre>---STARTKAMPLEEFTIJD_custom---</pre>', null, WATCHDOG_DEBUG);
+    if ($extdebug == 1) { watchdog('php', '<pre>---START KAMPLEEFTIJD---</pre>', null, WATCHDOG_DEBUG); }
     #watchdog('php', '<pre>' . print_r($op, true) . '</pre>', null, WATCHDOG_DEBUG);
     #watchdog('php', '<pre>' . print_r($groupID, true) . '</pre>', null, WATCHDOG_DEBUG);
     #watchdog('php', '<pre>'. print_r($entityID, TRUE) .'</pre>', NULL, WATCHDOG_DEBUG);
@@ -67,16 +72,16 @@ function kampleeftijd_civicrm_custom($op, $groupID, $entityID)
         $processkampleeftijd = 1;
         #watchdog('php', '<pre>civicrm_custom:' . print_r($groupID, true) . '</pre>', null, WATCHDOG_DEBUG);
         #watchdog('php', '<pre>set_processkampleeftijd:' . print_r($processkampleeftijd, true) . '</pre>', null, WATCHDOG_DEBUG);
-        $result = kampleeftijd_configure($op, $groupID, $entityID);
+        $result = leeftijd_configure($op, $groupID, $entityID);
     }
-    watchdog('php', '<pre>value_processkampleeftijd:' . print_r($processkampleeftijd, true) . '</pre>', null, WATCHDOG_DEBUG);
-    watchdog('php', '<pre>---ENDKAMPLEEFTIJD_custom---</pre>', null, WATCHDOG_DEBUG);
+    if ($extdebug == 1) { watchdog('php', '<pre>value_processkampleeftijd:' . print_r($processkampleeftijd, true) . '</pre>>', null, WATCHDOG_DEBUG); }
+    if ($extdebug == 1) { watchdog('php', '<pre>---EINDE KAMPLEEFTIJD---</pre>', null, WATCHDOG_DEBUG); }
 }
 
-function kampleeftijd_configure($op, $groupID, $entityID)
+function leeftijd_configure($op, $groupID, $entityID)
 {
 
-    watchdog('php', '<pre>---STARTKAMPLEEFTIJD PROCESS---</pre>', null, WATCHDOG_DEBUG);
+    if ($extdebug == 1) { watchdog('php', '<pre>---STARTKAMPLEEFTIJD PROCESS---</pre>', null, WATCHDOG_DEBUG); }
     $tableName1      = "civicrm_value_werving_promotie_106"; //    table name for the custom group (each set of custom fields has a corresponding table in the database)
     $tableName2      = "civicrm_contact"; //    table name for the custom group (each set of custom fields has a corresponding table in the database)
     $datumkomendkamp = '2019-08-01';
@@ -91,18 +96,18 @@ function kampleeftijd_configure($op, $groupID, $entityID)
         $leeftijd_komendkamp_rond = 0;
         $leeftijd_komendkamp      = $dao1->leeftijdkomendkamp;
         $leeftijd_komendkamp_rond = floor($dao1->leeftijdkomendkamp);
-        watchdog('php', '<pre>leeftijdkomendkamp:'. print_r($leeftijd_komendkamp, TRUE) .'</pre>', NULL, WATCHDOG_DEBUG);
-        watchdog('php', '<pre>leeftijdkomendkamp_rond:'. print_r($leeftijd_komendkamp_rond, TRUE) .'</pre>', NULL, WATCHDOG_DEBUG);
+        if ($extdebug == 1) { watchdog('php', '<pre>leeftijdkomendkamp:'. print_r($leeftijd_komendkamp, TRUE) .'</pre>', null, WATCHDOG_DEBUG); }
+        if ($extdebug == 1) { watchdog('php', '<pre>leeftijdkomendkamp_rond:'. print_r($leeftijd_komendkamp_rond, TRUE) .'</pre>', null, WATCHDOG_DEBUG); }
 
         if (!empty($leeftijd_komendkamp)) {
             /* $sql2 = "UPDATE $tableName1 SET leeftijd_komendkamp_552 = $leeftijd_komendkamp WHERE entity_id = $id"; */
             $sql2 = "UPDATE $tableName1 SET leeftijd_komendkampgetal_571 = $leeftijd_komendkamp, leeftijd_komendkamprond_871 = $leeftijd_komendkamp_rond WHERE entity_id = $id";
-            watchdog('php', '<pre>' . print_r($sql2, true) . '</pre>', null, WATCHDOG_DEBUG);
+            if ($extdebug == 1) { watchdog('php', '<pre>' . print_r($sql2, true) . '</pre>', null, WATCHDOG_DEBUG); }
             $dao2 = CRM_Core_DAO::executeQuery($sql2, CRM_Core_DAO::$_nullArray);
             /* watchdog('php', '<pre>'. print_r($dao2, TRUE) .'</pre>', NULL, WATCHDOG_DEBUG); */
 
             if ($leeftijd_komendkamp_rond < 18) {
-                watchdog('php', '<pre>leeftijdkomendkamp [emailgreeting2]:' . print_r($leeftijd_komendkamp, true) . '</pre>', null, WATCHDOG_DEBUG);
+                if ($extdebug == 1) { watchdog('php', '<pre>leeftijdkomendkamp [emailgreeting2]:' . print_r($leeftijd_komendkamp, true) . '</pre>', null, WATCHDOG_DEBUG); }
                 $result = civicrm_api3('Contact', 'create', array(
                     'debug'                   => 1,
                     'email_greeting_display'  => 2,
@@ -112,7 +117,7 @@ function kampleeftijd_configure($op, $groupID, $entityID)
                     'id'                      => $id,
                 ));
             } else {
-                watchdog('php', '<pre>leeftijdkomendkamp [emailgreeting1]:' . print_r($leeftijd_komendkamp, true) . '</pre>', null, WATCHDOG_DEBUG);
+                if ($extdebug == 1) { watchdog('php', '<pre>leeftijdkomendkamp [emailgreeting1]:' . print_r($leeftijd_komendkamp, true) . '</pre>', null, WATCHDOG_DEBUG); }
                 $result = civicrm_api3('Contact', 'create', array(
                     'debug'                   => 1,
                     'email_greeting_display'  => 1,
@@ -124,15 +129,15 @@ function kampleeftijd_configure($op, $groupID, $entityID)
             }
         }
     }
-    watchdog('php', '<pre>---ENDKAMPLEEFTIJD PROCESS---</pre>', null, WATCHDOG_DEBUG);
+    if ($extdebug == 1) { watchdog('php', '<pre>---ENDKAMPLEEFTIJD PROCESS---</pre>', null, WATCHDOG_DEBUG); }
 }
 
 /**
  * Implementation of hook_civicrm_config
  */
-function kampleeftijd_civicrm_config(&$config)
+function leeftijd_civicrm_config(&$config)
 {
-    _kampleeftijd_civix_civicrm_config($config);
+    _leeftijd_civix_civicrm_config($config);
 }
 
 /**
@@ -140,41 +145,41 @@ function kampleeftijd_civicrm_config(&$config)
  *
  * @param $files array(string)
  */
-function kampleeftijd_civicrm_xmlMenu(&$files)
+function leeftijd_civicrm_xmlMenu(&$files)
 {
-    _kampleeftijd_civix_civicrm_xmlMenu($files);
+    _leeftijd_civix_civicrm_xmlMenu($files);
 }
 
 /**
  * Implementation of hook_civicrm_install
  */
-function kampleeftijd_civicrm_install()
+function leeftijd_civicrm_install()
 {
-    return _kampleeftijd_civix_civicrm_install();
+    return _leeftijd_civix_civicrm_install();
 }
 
 /**
  * Implementation of hook_civicrm_uninstall
  */
-function kampleeftijd_civicrm_uninstall()
+function leeftijd_civicrm_uninstall()
 {
-    return _kampleeftijd_civix_civicrm_uninstall();
+    return _leeftijd_civix_civicrm_uninstall();
 }
 
 /**
  * Implementation of hook_civicrm_enable
  */
-function kampleeftijd_civicrm_enable()
+function leeftijd_civicrm_enable()
 {
-    return _kampleeftijd_civix_civicrm_enable();
+    return _leeftijd_civix_civicrm_enable();
 }
 
 /**
  * Implementation of hook_civicrm_disable
  */
-function kampleeftijd_civicrm_disable()
+function leeftijd_civicrm_disable()
 {
-    return _kampleeftijd_civix_civicrm_disable();
+    return _leeftijd_civix_civicrm_disable();
 }
 
 /**
@@ -183,7 +188,7 @@ function kampleeftijd_civicrm_disable()
  * Generate a list of entities to create/deactivate/delete when this module
  * is installed, disabled, uninstalled.
  */
-function kampleeftijd_civicrm_managed(&$entities)
+function leeftijd_civicrm_managed(&$entities)
 {
-    return _kampleeftijd_civix_civicrm_managed($entities);
+    return _leeftijd_civix_civicrm_managed($entities);
 }
